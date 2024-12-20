@@ -34,17 +34,18 @@ if [[ "$1" == "start" ]]; then
     fi
 
 
-    echo "${PINK}Clearing existing database data ..."
-    if ! docker-compose exec app php artisan migrate:reset; then
-        echo "${PINK}Error: Failed to reset database migrations."
-        exit 1
-    fi
 
     echo "${PINK}Running migrations ..."
-    if ! docker-compose exec app php artisan migrate --seed; then
+    if ! docker-compose exec app php artisan migrate; then
         echo "${PINK}Error: Database migrations failed."
         exit 1
     fi
+
+     echo "${PINK}Seeding database ..."
+        if ! docker-compose exec app php artisan db:seed --class=Modules\\User\\Database\\Seeders\\UserSeeder; then
+            echo "${PINK}Error: Database seeding failed."
+            exit 1
+        fi
 
 
 elif [[ "$1" == "stop" ]]; then
