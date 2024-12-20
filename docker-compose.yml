@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: ./src
-      dockerfile: ../Dockerfile
+      dockerfile: Dockerfile
     volumes:
       - ./src:/var/www/html
       - ./src/modules/User:/var/www/html/modules/User:ro

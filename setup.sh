@@ -54,6 +54,27 @@ elif [[ "$1" == "setup" ]]; then
 
     echo "${GREEN}Configuration completed successfully!"
 
+
+    echo -e "${PINK}Installing npm dependencies ...${RESET}"
+     cd ./src
+    if ! docker compose exec app npm install; then
+          echo -e "${PINK}Error: Failed to install dependencies.${RESET}"
+          exit 1
+    fi
+    cd ..
+    echo "${GREEN}Npm dependencies installed successfully!"
+
+    echo -e "${PINK}Building frontend assets ...${RESET}"
+     cd ./src
+    if ! docker compose exec app npm run build; then
+            echo -e "${PINK}Error: Failed to build frontend assets.${RESET}"
+            exit 1
+    fi
+    cd ..
+    echo "${GREEN}Finished building frontend assets successfully!"
+
+
+
 # Stop application containers
 elif [[ "$1" == "stop" ]]; then
     echo "${PINK}Stopping Docker containers ..."
