@@ -31,7 +31,7 @@ class UserController extends Controller
         $user->enabled = false;
         $user->save();
 
-        return response()->json($user);
+        return response()->json($user->makeHidden(['created_at', 'updated_at']));
     }
 
     public function enable($userId)
@@ -40,6 +40,6 @@ class UserController extends Controller
         $user->enabled = true;
         $user->save();
 
-        return response()->json($user);
+        return response()->json($user->makeHidden(['created_at', 'updated_at']));
     }
 }

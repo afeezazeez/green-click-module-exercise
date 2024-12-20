@@ -6,4 +6,6 @@ use Modules\User\Http\Controllers\UserController;
 
 Route::prefix('users')->name('users.')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('index');
+    Route::get('/disable/{user}', [UserController::class, 'disable'])->name('disable');
+    Route::get('/enable/{user}', [UserController::class, 'enable'])->name('enable');
 });
