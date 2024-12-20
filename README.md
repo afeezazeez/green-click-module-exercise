@@ -1,32 +1,134 @@
-# Module Exercise
+# User Module
 
-This is a module-aware Laravel app stub (contained in [./src](./src)), with a `Demo` module that adds a `GET /demo` endpoint. The Laravel app is a proof-of-concept host that is capable of loading modules (on startup) that extend its functionality, without direct references from the host.
+This is a `User` module for the Laravel app, which is designed to dynamically extend the functionality of the host app. This module exposes routes for managing users, including enabling, disabling, and listing users.
 
 ### Module Structure
 
-The only required file in a module is a `routes.php` (as demonstrated in [./src/modules/Demo/routes.php](./src/modules/Demo/routes.php)). Controllers must be based on `Illuminate\Routing\Controller` and namespaces must be correct, per Laravel's conventions.
+The `User` module includes the following components:
 
-## Your Task
+1. **Routes**  
+   The routes for the `User` module are located in `./src/modules/User/routes.php`.  
+   This file defines the following routes:
+    - `GET /users`: Returns a list of all users.
+    - `POST /users/disable/{userId}`: Disables a user by ID.
+    - `POST /users/enable/{userId}`: Enables a user by ID.
 
-Implement a `User` module that meets the functional requirements, and cover your logic in relevant automated tests. Fork this repository, implement your solution and replace this README file with instructions for running your application.
+2. **Model**  
+   The `User` model represents a user entity and is located in `./src/modules/User/Models/User.php`.
 
-## Instructions
+3. **Factory**  
+   The `UserFactory` generates dummy users for testing and seeding purposes, located in `./src/modules/User/Database/factories/UserFactory.php`.
 
-1. Containerize the application with a Dockerfile in the `./src` directory. Note: There are bonus points for readability, slim container image size, multi-stage build, etc.
-2. Add a `compose.yml` in the repository root with an `app` service (being the Laravel app) and a `mysql` service which the Laravel app must connect to for persistence.
-3. Place your `User` module in `./src/modules`. Note: There are bonus points for binding the `User` module directory as a read-only volume in the `compose.yml` file.
+4. **Seeder**  
+   The `UserSeeder` is responsible for seeding user data into the database. It's located in `./src/modules/User/Database/Seeders/UserSeeder.php`.
 
-> See [./docs](./docs) for the fields required in persisted user states and returned payloads.
+5. **Migration**  
+   The migration that creates the `users` table is located in `./src/modules/User/Database/Migrations/xxxx_xx_xx_create_users_table.php`.
 
-## Functional Requirements
+6. **Controller**  
+   The `UserController` handles actions related to users, such as listing, enabling, and disabling users. It's located in `./src/modules/User/Http/Controllers/UserController.php`.
 
-1. Running `docker compose up` in the repository/solution root should run and expose the app to the host machine on port `59000`. No other port should be exposed to the host machine.
-2. `GET /users` should either return a JSON of all users or a view that lists the users. Both are acceptable, as long as the list the current and expected data when refreshed. 
-3. `POST /users/disable/{userId}` where `userId` is an integer should disable the user's account and return the new state of the user account in JSON format.
-4. `POST /users/enable/{userId}` where `userId` is an integer should enable the user's account and return the new state of the user account in JSON format.
-5. The state of the user accounts should persist across app restarts.
+### Routes Exposed
 
-## Constraints
+The following routes are defined for the `User` module:
 
-1. Do not add any routes to the host app. All required routes must be provisioned in the module.
-2. Do not reference ANY classes or artifacts in a module from the host app. The app is configured to dynamically load classes and controllers from modules and the routes in their `routes.php`.
+1. **GET /users**  
+   Retrieves a list of all users in a structured JSON format.  
+   **Example Response:**
+   ```json
+   {
+     "1": {
+       "id": 1,
+       "name": "John Doe",
+       "email": "john.doe@example.com",
+       "enabled": true
+     },
+     "2": {
+       "id": 2,
+       "name": "Jane Smith",
+       "email": "jane.smith@example.com",
+       "enabled": false
+     }
+   }
+2. **POST /users/disable/{userId}**  
+   Disables the user by setting their `enabled` field to `false`.
+
+   **Example Response:**
+   ```json
+   {
+     "id": 1,
+     "name": "John Doe",
+     "email": "john.doe@example.com",
+     "enabled": false
+   }
+
+3. **POST /users/enable/{userId}**  
+   Enables the user by setting their `enabled` field to `true`.
+
+   **Example Response:**
+   ```json
+   {
+     "id": 1,
+     "name": "John Doe",
+     "email": "john.doe@example.com",
+     "enabled": true
+   }
+
+
+## Setup & Commands
+
+To work with this application and the `User` module, follow the instructions below.
+
+### Boot the Application
+
+To boot the app, run:
+
+```bash
+./setup.sh start
+```
+
+### Configure the Laravel Application
+
+To configure the Laravel app (generate keys, run migrations, etc.), run:
+
+```bash
+./setup.sh setup
+```
+
+### Stop the Application
+
+To stop the app, run:
+```bash
+./setup.sh stop
+```
+
+### Run User Module Specific Tests
+
+To run the tests specific to the User module, execute:
+```bash
+./run_tests.sh
+```
+
+
+### Permission Issues
+
+If you face permission issues when running the shell scripts (e.g., permission denied), you can resolve it by granting execute permissions. Use the following command:
+```bash
+chmod +x ./setup.sh
+chmod +x ./run_tests.sh
+```
+
+You should be able to access the app at http://localhost:59000/users
+
+
+## Additional Information
+
+### Docker Compose
+This project uses Docker for containerization. The `docker-compose.yml` file is set up to run both the app (Laravel) and MySQL services.
+
+### Persistence
+User data is stored in a MySQL database, and changes to the `enabled` field for users will persist across app restarts.
+
+### No Direct Modification of Host App
+The `User` module is self-contained and does not directly reference or modify any code in the host app. All routes and logic are encapsulated within the module.
+
