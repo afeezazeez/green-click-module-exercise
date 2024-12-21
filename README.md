@@ -1,6 +1,7 @@
 # User Module
 
 This is a `User` module for the Laravel app, which is designed to dynamically extend the functionality of the host app. This module exposes routes for managing users, including enabling, disabling, and listing users.
+A UI to display all users was also designed using Vue js.
 
 ### Module Structure
 
@@ -84,27 +85,13 @@ To work with this application and the `User` module, follow the instructions bel
 To boot the app, run:
 
 ```bash
-./setup.sh start
+docker compose up
 ```
 
-### Configure the Laravel Application
-
-To configure the Laravel app (generate keys, run migrations, etc.), run:
-
-```bash
-./setup.sh setup
-```
-
-### Stop the Application
-
-To stop the app, run:
-```bash
-./setup.sh stop
-```
 
 ### Run User Module Specific Tests
 
-To run the tests specific to the User module, execute:
+To run the tests specific to the User module, From the `root` of the `repository` execute:
 ```bash
 ./run_tests.sh
 ```
@@ -114,17 +101,16 @@ To run the tests specific to the User module, execute:
 
 If you face permission issues when running the shell scripts (e.g., permission denied), you can resolve it by granting execute permissions. Use the following command:
 ```bash
-chmod +x ./setup.sh
 chmod +x ./run_tests.sh
 ```
 
-You should be able to access the app at http://localhost:59000/users
+You should be able to view the Vue app UI  at http://localhost:59000/
 
 
 ## Additional Information
 
 ### Docker Compose
-This project uses Docker for containerization. The `docker-compose.yml` file is set up to run both the app (Laravel) and MySQL services.
+This project uses Docker for containerization. The `compose.yml` file is set up to run both the app (Laravel) and MySQL services.
 
 ### Persistence
 User data is stored in a MySQL database, and changes to the `enabled` field for users will persist across app restarts.
