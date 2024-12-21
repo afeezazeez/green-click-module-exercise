@@ -19,7 +19,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     libzip-dev \
     apt-utils \
-    libonig-dev
+    libonig-dev \
+    default-mysql-client  # Updated MySQL client installation
 
 # Install PHP extensions
 RUN docker-php-ext-install zip pdo_mysql mbstring exif
@@ -51,5 +52,8 @@ USER user
 # Expose PHP-FPM port
 EXPOSE 9000
 
+COPY src/entrypoint.sh /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["sh", "/usr/local/bin/entrypoint.sh"]
+
 # Start PHP-FPM
-CMD ["php-fpm"]
+#CMD ["php-fpm"]
